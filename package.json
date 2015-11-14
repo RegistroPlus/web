@@ -1,0 +1,37 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "description": "Front-end registro elettronico",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --inline",
+    "dev-hot": "webpack-dev-server --inline --hot",
+    "build": "SET NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/registroplus/web.git"
+  },
+  "author": "Matteo Contrini <m.contrini@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/registroplus/web/issues"
+  },
+  "dependencies": {
+    "superagent": "^1.4.0",
+    "vue": "^1.0.0-rc.1",
+    "vue-router": "^0.7.4"
+  },
+  "devDependencies": {
+    "css-loader": "^0.21.0",
+    "extract-text-webpack-plugin": "^0.8.2",
+    "file-loader": "^0.8.4",
+    "nib": "^1.1.0",
+    "style-loader": "^0.13.0",
+    "stylus-loader": "^1.4.0",
+    "vue-html-loader": "^1.0.0",
+    "vue-loader": "^4.0.7",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
+  }
+}
