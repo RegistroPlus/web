@@ -3,38 +3,42 @@ require('./css/bootstrap.css');
 var Vue = require('vue')
 var VueRouter = require('vue-router');
 
-var App = require('./components/App.vue');
-var MainView = require('./components/MainView.vue')
-var LoginView = require('./components/LoginView.vue');
-var NotFoundView = require('./components/NotFoundView.vue');
-var DashboardView = require('./components/DashboardView.vue');
+var App           = require('./components/App.vue');
+var LoginView     = require('./components/LoginView.vue');
+var NotFoundView  = require('./components/NotFoundView.vue');
+var GiornataView  = require('./components/GiornataView.vue');
 
-var LeftNavView = require('./components/LeftNavView.vue');
+var LeftNavView      = require('./components/LeftNavView.vue');
 var RightContentView = require('./components/RightContentView.vue');
 
 // Install router
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 Vue.component('left-nav', LeftNavView);
 Vue.component('right-content', RightContentView);
+
+var utils = require('./common/utils.js');
+
+Vue.filter('time', function(date) {
+	var hours = utils.padZero(date.getHours());
+	var minutes = utils.padZero(date.getMinutes());
+	//var seconds = utils.padZero(date.getSeconds());
+	
+	var formatted = hours + ':' + minutes;
+	return formatted;
+});
 
 // Create new Router instance
 var router = new VueRouter()
 
 router.map({
-	'/': {
-		component: MainView,
-		hero: true,
-		skipIfAuth: true
-	},
 	'/login': {
 		component: LoginView,
-		hero: true,
-		skipIfAuth: true
+		hero: true
 	},
-	'/dashboard': {
-		component: DashboardView,
-		name: 'dashboard',
+	'/giornata': {
+		component: GiornataView,
+		name: 'giornata',
 		auth: true
 	},
 	'*': {
@@ -49,8 +53,8 @@ router.beforeEach(function (transition) {
 	var token = localStorage.getItem('token');
 	
 	var to = transition.to;
-	
-	// If the resourece is protected
+		
+	// If the resource is protected
 	if (to.auth === true) {
 		// No token
 		if (!token || token == null) {
@@ -59,12 +63,15 @@ router.beforeEach(function (transition) {
 		}
 	}
 	// If the destination path is the root or login
-	else if (to.skipIfAuth === true) {
+	else if (to.path == '/login') {
 		// User is already logged in
 		// redirect root and /login to the private dashboard
 		if (token && token != null) {
-			transition.redirect('/dashboard');
+			transition.redirect('/giornata');
 		}
+	}
+	else if (to.path == '/') {
+		transition.redirect('/login');
 	}
 	
 	transition.next();

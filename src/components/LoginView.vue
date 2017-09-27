@@ -7,10 +7,10 @@
 				<h1>Dedalo</h1>
 				<form @submit.prevent="login">
 					<div class="form-group">
-						<input type="text" v-model="username" autofocus class="form-control input-lg" placeholder="Nome utente" />
+						<input type="text" required v-model="username" autofocus class="form-control input-lg" placeholder="Nome utente" />
 					</div>
 					<div class="form-group">
-						<input type="password" v-model="password" class="form-control input-lg" placeholder="Password" />
+						<input type="password" required v-model="password" class="form-control input-lg" placeholder="Password" />
 					</div>
 					
 					<a class="btn btn-blue btn-lg" @click="login">ACCEDI</a>
@@ -52,14 +52,15 @@ module.exports = {
 	
 	methods: {
 		login: function() {
+			// Login
 			request({
 				method: 'POST',
-				endpoint: '/api/v1/auth/sign',
+				endpoint: '/auth/sign',
 				body: { username: this.username, password: this.password }
 			}, function(err, res) {
 				if (res.status == 200) {
-					localStorage.setItem('token', res.body['data']['token']);
-					this.$route.router.go('dashboard');
+					var token = res['body']['data']['token'];
+					this.$dispatch('loginSuccess', token);
 				}
 				else {
 					alert(res.text);
@@ -79,10 +80,17 @@ module.exports = {
 	height: 100%;
 	
 	/*
-	HERO
+	HERO COVER
 	 */
 	background: url('/images/hero/2-hd.jpg') no-repeat center center fixed;
 	background-size: cover;
+	
+	.opacity
+		background: #000000;
+		opacity: 0.3;
+		width: 100%;
+		height: 100%;
+		position: absolute;
 
 /**
  * LOGIN
@@ -111,13 +119,6 @@ module.exports = {
 
 .login-box form
 	margin-top: 20px;
-
-.opacity
-	background: #000000;
-	opacity: 0.3;
-	width: 100%;
-	height: 100%;
-	position: absolute;
 
 .quote
 	position: relative;

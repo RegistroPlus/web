@@ -16,4 +16,5 @@
 
 #content
 	margin-left: $sidebar-width
+	background: $criceto
 </style>

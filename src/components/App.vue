@@ -1,96 +1,44 @@
 <template>
-	<router-view></router-view>
+	<div>
+		<router-view></router-view>
+	</div>
 </template>
 
 <style lang="stylus">
-@import "nib"
-
-/* source-sans-pro-regular - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'),
-       url('../fonts/source-sans-pro-v9-latin-regular.woff2') format('woff2'),
-       url('../fonts/source-sans-pro-v9-latin-regular.woff') format('woff');
-}
-/* source-sans-pro-600 - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 600;
-  src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'),
-       url('../fonts/source-sans-pro-v9-latin-600.woff2') format('woff2'),
-       url('../fonts/source-sans-pro-v9-latin-600.woff') format('woff');
-}
-/* source-sans-pro-700 - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'),
-       url('../fonts/source-sans-pro-v9-latin-700.woff2') format('woff2'),
-       url('../fonts/source-sans-pro-v9-latin-700.woff') format('woff');
-}
-/* source-sans-pro-900 - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 900;
-  src: local('Source Sans Pro Black'), local('SourceSansPro-Black'),
-       url('../fonts/source-sans-pro-v9-latin-900.woff2') format('woff2'),
-       url('../fonts/source-sans-pro-v9-latin-900.woff') format('woff');
-}
-
-/* oswald-regular - latin */
-@font-face {
-  font-family: 'Oswald';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Oswald Regular'), local('Oswald-Regular'),
-       url('../fonts/oswald-v10-latin-regular.woff2') format('woff2'),
-       url('../fonts/oswald-v10-latin-regular.woff') format('woff');
-}
-
-body {
-	font-family: 'Source Sans Pro', sans-serif;
-	font-size: 14px;
-	background: none;
-}
-
-.relative
-	position: relative
-
-/**
- * LINKS
- */
-a {
-	color: #00B7FF;
-}
-
-/**
- * HEADINGS
- */
-h1 {
-	margin: 0;
-}
-
-/**
- * BUTTONS
- */
-.btn-blue {
-	display: inline-block;
-	margin-top: 10px;
-	background-color: #1C4363;
-	color: white;
-}
-.btn:hover, .btn:focus {
-	color: white;
-	background-color: #032A4A;
-}
-.form-control:focus {
-	border-color: #1C4363;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(29,67,99,0.4);
-}
-
+@import "../css/app.styl"
 </style>
+
+<script>
+var request = require('../common/request.js');
+
+module.exports = {
+	ready: function() {
+		this.loadUser();
+	},
+	
+	data: function() {
+		return {
+			user: null
+		};
+	},
+	
+	events: {
+		loginSuccess: function(token) {
+			localStorage.setItem('token', token);
+			this.$route.router.go('giornata');
+			//this.loadUser();
+		}
+	},
+	
+	methods: {
+		loadUser: function() {
+			var self = this;
+			
+			// Get current user
+			request({ endpoint: '/auth/me' }, function(err, res) {
+				self.user = res.body['data'];
+			});
+		}
+	}
+};
+</script>
